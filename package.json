@@ -1,0 +1,39 @@
+{
+  "name": "au-parking_customer",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "ngrok": "ngrok http 5173",
+    "deploy": "tsc && vite build; firebase deploy --only hosting:customer;"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.13",
+    "@line/liff": "2.21.3",
+    "firebase": "^9.14.0",
+    "moment-timezone": "^0.5.39",
+    "promptpay-qr": "^0.5.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-firebase-hooks": "^5.1.1",
+    "react-image-file-resizer": "^0.4.8",
+    "react-qr-code": "^2.0.8",
+    "react-router-dom": "^6.4.3",
+    "workbox-core": "^6.5.4",
+    "workbox-expiration": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
+    "@vitejs/plugin-react": "2.2.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4",
+    "typescript": "4.9.3",
+    "vite": "3.2.4"
+  }
+}
