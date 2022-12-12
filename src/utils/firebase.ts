@@ -12,13 +12,9 @@ import {
   QuerySnapshot,
   where,
 } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Car } from "../types/car";
 import { Transaction } from "../types/transaction";
 import { Payment } from "../types/payment";
-import { getUploadTime } from "./datetime";
-import { handleHelperError, FormError } from "./error";
 import { Customer } from "../types/customer";
 import { Staff } from "../types/staff";
 
@@ -37,28 +33,11 @@ const FIREBASE_CONFIG: FirebaseOptions = {
 
 // Initialize App.
 const App = initializeApp(FIREBASE_CONFIG);
-const isLocalhost = Boolean(
-  window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === "[::1]" ||
-    // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
-);
-if (isLocalhost)
-  // @ts-ignore
-  window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-initializeAppCheck(App, {
-  provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
-  isTokenAutoRefreshEnabled: true,
-});
 
 // Export Services.
 export const Authentication = getAuth(App);
 export const Functions = getFunctions(App, "asia-southeast2");
 export const Firestore = getFirestore(App);
-export const Storage = getStorage(App);
 
 // Collections
 export const carsCollection = (uid: string | undefined) =>
@@ -136,6 +115,19 @@ export const transactionDocument = (tid: string | undefined) =>
   tid
     ? (doc(Firestore, "transactions", tid) as DocumentReference<Transaction>)
     : undefined;
+export const paymentDocument = (
+  tid: string | undefined,
+  pid: string | undefined
+) =>
+  tid && pid
+    ? (doc(
+        Firestore,
+        "transactions",
+        tid,
+        "payments",
+        pid
+      ) as DocumentReference<Payment>)
+    : undefined;
 export const customerDocument = (uid: string | undefined) =>
   uid
     ? (doc(Firestore, "customers", uid) as DocumentReference<Customer>)
@@ -144,19 +136,3 @@ export const staffDocument = (email: string | undefined) =>
   email
     ? (doc(Firestore, "staffs", email) as DocumentReference<Staff>)
     : undefined;
-
-// Storage
-export const uploadSlipImage = async (
-  tid: string,
-  file: File
-): Promise<string> => {
-  const photoRef = ref(
-    Storage,
-    `/payments/${tid}/${getUploadTime()}-${file.name}`
-  );
-  const snapshot = await uploadBytes(photoRef, file).catch((err) => {
-    handleHelperError("uploadTransactionImage", err);
-    throw new FormError({ slip: `Cannot upload timestamp slip's photo.` });
-  });
-  return await getDownloadURL(snapshot.ref);
-};

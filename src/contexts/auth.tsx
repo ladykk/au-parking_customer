@@ -1,7 +1,6 @@
 import {
   browserLocalPersistence,
   setPersistence,
-  signInAnonymously,
   signInWithCustomToken,
   User,
 } from "firebase/auth";
