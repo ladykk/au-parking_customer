@@ -15,7 +15,7 @@ function CheckOutForm({ tid, pid }: { tid: string; pid: string }) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.hostname}/payment/${tid}/${pid}`,
+        return_url: `https://${window.location.hostname}/payment/${tid}/${pid}`,
       },
     });
   };
