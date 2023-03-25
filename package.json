@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroicons/react": "^2.0.13",
     "@line/liff": "2.21.3",
+    "@stripe/react-stripe-js": "^1.16.1",
+    "@stripe/stripe-js": "^1.46.0",
     "firebase": "^9.14.0",
     "moment-timezone": "^0.5.39",
     "promptpay-qr": "^0.5.0",

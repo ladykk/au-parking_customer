@@ -13,58 +13,26 @@ type PaymentCardProps = {
 export function PaymentCard({ payment }: PaymentCardProps) {
   return (
     payment && (
-      <div className="w-full h-24 py-2 px-4 border-b flex items-center justify-between gap-2 hover:bg-zinc-50">
-        <div className="flex flex-col">
-          <div className="flex gap-1 items-center">
-            <PaymentStatusBadge status={payment.status} />
-          </div>
-          <p>
-            <span className="font-medium">Amount:</span> ฿{" "}
-            {payment.amount.toFixed(2)}
-          </p>
-          <p>
-            <span className="font-medium">Timestamp:</span>{" "}
-            {timestampToString(payment.timestamp)}
-          </p>
+      <div className="w-full py-2 px-4 border-b flex flex-col hover:bg-zinc-50">
+        <div className="flex gap-1 items-center">
+          <PaymentStatusBadge status={payment.status} />
         </div>
-        <PaymentPreview payment={payment} />
+        <p>
+          <span className="font-medium">Amount:</span> ฿{" "}
+          {payment.amount.toFixed(2)}
+        </p>
+        <p>
+          <span className="font-medium">Timestamp:</span>{" "}
+          {timestampToString(payment.timestamp)}
+        </p>
+        {payment.reason && (
+          <p>
+            <span className="font-medium">Reason:</span>{" "}
+            {payment.reason.slice(15)}
+          </p>
+        )}
       </div>
     )
-  );
-}
-
-// C - Payment preview
-type Props = { payment: Payment };
-export function PaymentPreview({ payment }: Props) {
-  // [States]
-  const [isModalShow, setModalShow] = useState<boolean>(false);
-
-  // [Functions]
-  // F - Handle modal.
-  const handleModal = handleModalFunction(setModalShow, () => {});
-
-  return (
-    <>
-      <PhotoIcon
-        className="w-9 h-9 md:w-8 md:h-8 p-1 rounded-md text-black hover:bg-gray-300 hover:cursor-pointer"
-        onClick={() => handleModal()}
-      />
-      <Modal
-        title={`฿ ${payment.amount.toFixed(2)} on ${timestampToString(
-          payment.timestamp
-        )}`}
-        isShow={isModalShow}
-        setShow={setModalShow}
-      >
-        <Body>
-          <img
-            src={payment.slip ? payment.slip : no_img}
-            alt=""
-            className="mx-auto w-full h-[75vh] object-scale-down"
-          />
-        </Body>
-      </Modal>
-    </>
   );
 }
 
@@ -83,13 +51,13 @@ export function PaymentStatusBadge({
     <Badge
       size={size}
       color={
-        status === "Approve"
+        status === "Success"
           ? "green"
-          : status === "Reject"
+          : status === "Failed"
           ? "red"
           : status === "Pending"
           ? "yellow"
-          : status === "Refund"
+          : status === "Refund" || status === "Canceled"
           ? "gray"
           : "blue"
       }

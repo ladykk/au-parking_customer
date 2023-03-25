@@ -14,6 +14,7 @@ import ProcessPayment from "./routes/payment/[tid]";
 import TransactionList from "./routes/transaction";
 import TransactionInfo from "./routes/transaction/[tid]";
 import Loading from "./components/Loading";
+import PaymentResult from "./routes/payment/[tid]/[pid]";
 
 function MyApp() {
   const { isLiffInitialized, liffError } = useLiff();
@@ -38,7 +39,13 @@ function MyApp() {
           path: "",
           element: <PaymentList />,
         },
-        { path: ":tid", element: <ProcessPayment /> },
+        {
+          path: ":tid",
+          children: [
+            { path: "", element: <ProcessPayment /> },
+            { path: ":pid", element: <PaymentResult /> },
+          ],
+        },
       ],
     },
     {
